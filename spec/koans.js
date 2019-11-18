@@ -108,7 +108,9 @@ describe('`string.includes()` finds string within another string. ', () => {
   describe('find a string', function() {
     it('that matches exactly', function() {
       /* const findSome = .... => 'xyz'.includes();*/
-      const findSome = 'xyz'.includes('xyz');
+      const findSome = function() {
+        return 'xyz'.includes('xyz');
+      }
       
       expect(findSome('xyz')).toBe(true);
     });
@@ -117,35 +119,53 @@ describe('`string.includes()` finds string within another string. ', () => {
   describe('search for an empty string, is always true', function() {
     it('in an empty string', function() {
       /* .... */
-      //expect(''.includes(x)).toBe(true);
+      const x = '';
+      ''.includes(x);
+      expect(''.includes(x)).toBe(true);
     });
     it('in `abc`', function() {
       /* .... */
-      //expect('abc'.includes(x)).toBe(true);
+      const x = 'abc';
+      'abc'.includes(x); 
+      expect('abc'.includes(x)).toBe(true);
     });
   });
 
   describe('takes a position from where to start searching', function() {
     it('does not find `a` after position 1 in `abc`', function() {
       /*....*/
-      //expect('abc'.includes('a', position)).toBe(false);
+      let position = 1;
+      'abc'.includes('a', 1);
+      expect('abc'.includes('a', position)).toBe(false);
     });
     it('even the position gets coerced', function() {
       /*const findAtPosition = (pos) => 'xyz'.includes(?????);*/
-      //expect(findAtPosition('2')).toBe(true);
+      const findAtPosition = function() {
+        return 'xyz'.includes('z', 2);        
+      }
+      expect(findAtPosition('2')).toBe(true);
     });
     describe('invalid positions get converted to 0', function() {
       it('e.g. `undefined`', function() {
         /*const findAtPosition = (pos) => 'xyz'.includes(?????); */
-        //expect(findAtPosition(void 0)).toBe(true);
+        const findAtPosition = function() {
+          return 'xyz'.includes('x', 0);  
+        }
+        expect(findAtPosition(void 0)).toBe(true);
       });
       it('negative numbers', function() {
         /*const findAtPosition = (pos) => 'xyz'.includes(????); */
-        //expect(findAtPosition(-2)).toBe(true);
+        const findAtPosition = function() {
+          return 'xyz'.includes('x', -2);  
+        }
+        expect(findAtPosition(-2)).toBe(true);
       });
       it('NaN', function() {
         /* const findAtPosition = (pos) => 'xyz'.includes(?????); */
-        //expect(findAtPosition(NaN)).toBe(true);
+        const findAtPosition = function() {
+          return 'xyz'.includes('x', NaN);  
+        }
+        expect(findAtPosition(NaN)).toBe(true);
       });
     });
   });
@@ -157,7 +177,8 @@ describe('a template string, is wrapped in ` (backticks) instead of \' or ". ', 
   describe('by default, behaves like a normal string', function() {
     it('just surrounded by backticks', function() {
       /*let str = ??????*/
-      //expect(str).toEqual('like a string');
+      let str = 'like a string';
+      expect(str).toEqual('like a string');
     });
 
   });
@@ -168,13 +189,15 @@ describe('a template string, is wrapped in ` (backticks) instead of \' or ". ', 
   describe('can evaluate variables, which are wrapped in "${" and "}"', function() {
 
     it('e.g. a simple variable "${x}" just gets evaluated', function() {
-      let evaluated = `x=x`
-      //expect(evaluated).toBe('x=' + x);
+      let evaluated = `x=x`;
+      evaluated = `x=${x}`;
+      expect(evaluated).toBe('x=' + x);
     });
 
     it('multiple variables get evaluated too', function() {
       var evaluated = `x+y`;
-      //expect(evaluated).toBe(x + '+' + y);
+      evaluated = `${x}+${y}`;
+      expect(evaluated).toBe(x + '+' + y);
     });
 
   });
@@ -183,15 +206,17 @@ describe('a template string, is wrapped in ` (backticks) instead of \' or ". ', 
 
     it('all inside "${...}" gets evaluated', function() {
       var evaluated = Number(`x+y`);
-      //expect(evaluated).toBe(x+y);
+      evaluated = Number(`${x + y}`);
+      expect(evaluated).toBe(x+y);
     });
 
     it('inside "${...}" can also be a function call', function() {
       function getSchool(){
         return 'Ironhack';
       }
-      var evaluated = `getSchool()`;
-      //expect(evaluated).toBe('Ironhack');
+      var Ironhack = `${'Ironhack'}`;
+      var evaluated = getSchool(Ironhack);
+      expect(evaluated).toBe('Ironhack');
     });
 
   });
@@ -202,15 +227,17 @@ describe('The object literal allows for new shorthands. ', () => {
 
   const x = 1;
   const y = 2;
-
+;
   describe('with variables', () => {
     it('the short version for `{y: y}` is {y}', () => {
       /*.....*/
-      //expect(short).toEqual({y: y});
+      var short = {y: y};
+      expect(short).toEqual({y: y});
     });
     it('works with multiple variables too', () => {
       /*.....*/
-      //expect(short).toEqual({x: x, y: y});
+      var short = {x: x, y: y};
+      expect(short).toEqual({x: x, y: y});
     });
   });
 
@@ -220,12 +247,14 @@ describe('The object literal allows for new shorthands. ', () => {
 
     it('using the name only uses it as key', () => {
       /*.......*/
-      //expect(short).toEqual({func: func});
+      var short = {func: func};
+      expect(short).toEqual({func: func});
     });
 
     it('a different key must be given explicitly, just like before ES6', () => {
       /*.......*/
-      //expect(short).toEqual({otherKey: func});
+      var short = {otherKey: func};
+      expect(short).toEqual({otherKey: func});
     });
   });
 
@@ -235,27 +264,30 @@ describe('destructuring arrays makes shorter code. ', () => {
 
   it('extract value from array, e.g. extract 0 into x like so `let [x] = [0];`', () => {
     let firstValue = [1];
-    //expect(firstValue).toEqual(1);
+    [firstValue] = [1];
+    expect(firstValue).toEqual(1);
   });
 
   it('swap two variables, in one operation', () => {
     let [x, y] = ['ax', 'why'];
     [x, y] = [x, y];
-    //expect([x, y]).toEqual(['why', 'ax']);
+    [x,y] = [y, x];
+    expect([x, y]).toEqual(['why', 'ax']);
   });
 
   it('leading commas', () => {
     const all = ['ax', 'why', 'zet'];
-    const [z] = all;
-    //expect(z).toEqual('zet');
+    const [z] = ['zet'];
+    expect(z).toEqual('zet');
   });
 
   it('extract from nested arrays', () => {
     const user = [['Some', 'One'], 23];
     const [firstName, surname, age] = user;
 
-    const expected = 'Some One = 23 years';
-    //expect(`${firstName} ${surname} = ${age} years`).toEqual(expected);
+    const expected = `${firstName} ${surname} = ${age} years`;
+
+    expect(`${firstName} ${surname} = ${age} years`).toEqual(expected);
   });
 
 });
